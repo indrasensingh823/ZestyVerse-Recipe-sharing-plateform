@@ -1,0 +1,547 @@
+/* CreateRecipe.css - Premium Modern Design */
+
+/* CSS Variables for consistent theming */
+:root {
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --primary-light: #818cf8;
+  --primary-glow: rgba(99, 102, 241, 0.25);
+  --secondary: #0f172a;
+  --accent: #f59e0b;
+  --success: #10b981;
+  --danger: #ef4444;
+  --dark: #1e293b;
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
+  --gray-400: #94a3b8;
+  --gray-500: #64748b;
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --gray-800: #1e293b;
+  --radius-sm: 0.5rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Base container */
+.create-recipe {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(0px);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-2xl);
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Auth required container (matching style) */
+.auth-required {
+  max-width: 500px;
+  margin: 4rem auto;
+  padding: 3rem 2rem;
+  background: white;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-2xl);
+  text-align: center;
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.auth-required h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 1.5rem;
+}
+
+.auth-required button {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  border: none;
+  padding: 0.875rem 2rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-md);
+}
+
+.auth-required button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  filter: brightness(1.05);
+}
+
+/* Typography */
+.create-recipe h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--secondary), var(--primary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 2rem;
+  text-align: center;
+  letter-spacing: -0.02em;
+}
+
+.create-recipe h3 {
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--gray-800);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--gray-200);
+  display: inline-block;
+  letter-spacing: -0.01em;
+}
+
+/* Form sections */
+.form-section {
+  background: var(--gray-50);
+  padding: 1.75rem;
+  border-radius: var(--radius-lg);
+  margin-bottom: 2rem;
+  transition: all var(--transition-normal);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.form-section:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-light);
+}
+
+/* Form groups */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--gray-700);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  transition: all var(--transition-fast);
+  background: white;
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--primary-glow);
+  transform: translateY(-1px);
+}
+
+.form-group input:hover,
+.form-group textarea:hover,
+.form-group select:hover {
+  border-color: var(--gray-300);
+}
+
+/* Form row (2 columns) */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Ingredients and Instructions rows */
+.ingredient-row,
+.instruction-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  animation: slideIn 0.3s ease-out;
+}
+
+.ingredient-row input {
+  flex: 1;
+  min-width: 120px;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  background: white;
+}
+
+.ingredient-row input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+.instruction-row {
+  align-items: stretch;
+}
+
+.step-number {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  font-weight: 700;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-md);
+  min-width: 70px;
+  text-align: center;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+  box-shadow: var(--shadow-sm);
+}
+
+.instruction-row textarea {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  resize: vertical;
+  transition: all var(--transition-fast);
+}
+
+.instruction-row textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+/* Buttons */
+.remove-btn,
+.add-btn,
+.submit-btn {
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  font-size: 0.9rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.remove-btn {
+  background: white;
+  color: var(--danger);
+  border: 2px solid var(--danger);
+  background: transparent;
+}
+
+.remove-btn:hover:not(:disabled) {
+  background: var(--danger);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.remove-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.add-btn {
+  background: linear-gradient(135deg, var(--gray-600), var(--gray-700));
+  color: white;
+  margin-top: 0.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.add-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  filter: brightness(1.05);
+}
+
+.submit-btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  font-size: 1.1rem;
+  padding: 1rem;
+  margin-top: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.submit-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.submit-btn:hover::before {
+  left: 100%;
+}
+
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  filter: brightness(1.05);
+}
+
+.submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Animation keyframes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .create-recipe {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+  
+  .create-recipe h1 {
+    font-size: 2rem;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .ingredient-row {
+    flex-direction: column;
+  }
+  
+  .ingredient-row input {
+    width: 100%;
+  }
+  
+  .instruction-row {
+    flex-direction: column;
+  }
+  
+  .step-number {
+    align-self: flex-start;
+  }
+  
+  .form-section {
+    padding: 1.25rem;
+  }
+  
+  .remove-btn,
+  .add-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .remove-btn {
+    margin-top: 0.5rem;
+  }
+}
+
+/* Dark mode support (optional, respects system preference) */
+@media (prefers-color-scheme: dark) {
+  .create-recipe {
+    background: rgba(30, 41, 59, 0.95);
+    backdrop-filter: blur(0px);
+  }
+  
+  .auth-required {
+    background: var(--gray-800);
+  }
+  
+  .form-section {
+    background: var(--gray-800);
+    border-color: var(--gray-700);
+  }
+  
+  .form-group label {
+    color: var(--gray-300);
+  }
+  
+  .form-group input,
+  .form-group textarea,
+  .form-group select,
+  .ingredient-row input,
+  .instruction-row textarea {
+    background: var(--gray-700);
+    border-color: var(--gray-600);
+    color: var(--gray-100);
+  }
+  
+  .form-group input::placeholder,
+  .ingredient-row input::placeholder,
+  .instruction-row textarea::placeholder {
+    color: var(--gray-400);
+  }
+  
+  .create-recipe h3 {
+    color: var(--gray-200);
+    border-bottom-color: var(--gray-700);
+  }
+  
+  .create-recipe h1 {
+    background: linear-gradient(135deg, #a5b4fc, #c7d2fe);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+  
+  .remove-btn {
+    background: transparent;
+    border-color: #f87171;
+    color: #f87171;
+  }
+  
+  .remove-btn:hover:not(:disabled) {
+    background: #f87171;
+    color: white;
+  }
+  
+  .add-btn {
+    background: linear-gradient(135deg, #475569, #334155);
+  }
+}
+
+/* Custom scrollbar for modern look */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--gray-100);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gray-400);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-500);
+}
+
+/* Focus visible accessibility */
+*:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Loading state subtle animation */
+.submit-btn:disabled {
+  position: relative;
+  background: linear-gradient(135deg, var(--gray-500), var(--gray-600));
+}
+
+/* Additional premium touches */
+.form-group input[type="url"] {
+  font-family: monospace;
+  letter-spacing: 0.3px;
+}
+
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236366f1' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+  background-position: right 1rem center;
+  background-repeat: no-repeat;
+  background-size: 1.25rem;
+}
+
+/* Smooth transitions for all interactive elements */
+button, input, textarea, select, .form-section {
+  transition: all var(--transition-fast);
+}
+
+/* Hover effect for form sections */
+.form-section:hover .form-group input,
+.form-section:hover .form-group textarea,
+.form-section:hover .form-group select {
+  border-color: var(--gray-300);
+}
+
+/* Image URL input special styling */
+input[name="image"] {
+  font-size: 0.9rem;
+  background: var(--gray-50);
+}
+
+/* Responsive textarea */
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Ensure proper spacing on small devices */
+@media (max-width: 480px) {
+  .create-recipe {
+    padding: 1rem;
+  }
+  
+  .form-section {
+    padding: 1rem;
+  }
+  
+  .step-number {
+    min-width: 60px;
+    font-size: 0.8rem;
+  }
+}

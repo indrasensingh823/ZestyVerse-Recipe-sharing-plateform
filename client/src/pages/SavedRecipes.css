@@ -1,0 +1,268 @@
+/* SavedRecipes.css */
+.saved-recipes {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 2rem 0;
+}
+
+.saved-recipes .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.saved-recipes h1 {
+  text-align: center;
+  color: #2d3748;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.saved-count {
+  text-align: center;
+  color: #718096;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  font-weight: 500;
+}
+
+/* Auth Required Styles */
+.auth-required {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+  padding: 2rem;
+}
+
+.auth-required h2 {
+  color: #4a5568;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.auth-required::before {
+  content: "🔒";
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.7;
+}
+
+/* Loading Styles */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  font-size: 1.3rem;
+  color: #667eea;
+  font-weight: 600;
+}
+
+.loading::after {
+  content: "";
+  width: 20px;
+  height: 20px;
+  border: 2px solid #667eea;
+  border-radius: 50%;
+  border-top-color: transparent;
+  margin-left: 10px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* No Saved Recipes Styles */
+.no-saved {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 2rem 0;
+}
+
+.no-saved h3 {
+  color: #4a5568;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.no-saved p {
+  color: #718096;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+.no-saved::before {
+  content: "📚";
+  font-size: 4rem;
+  display: block;
+  margin-bottom: 1rem;
+  opacity: 0.7;
+}
+
+/* Recipes Grid Styles */
+.recipes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 1rem 0;
+}
+
+/* Recipe Card Enhancement */
+.recipes-grid .recipe-card {
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: white;
+}
+
+.recipes-grid .recipe-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.error-box {
+  background: #ef4444;
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+/* Responsive Design */
+@media (max-width: 768px) {
+  .saved-recipes {
+    padding: 1rem 0;
+  }
+  
+  .saved-recipes h1 {
+    font-size: 2rem;
+  }
+  
+  .saved-count {
+    font-size: 1rem;
+  }
+  
+  .recipes-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    padding: 0.5rem 0;
+  }
+  
+  .auth-required h2 {
+    font-size: 1.5rem;
+  }
+  
+  .no-saved {
+    padding: 3rem 1.5rem;
+    margin: 1rem 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .saved-recipes .container {
+    padding: 0 0.5rem;
+  }
+  
+  .saved-recipes h1 {
+    font-size: 1.8rem;
+  }
+  
+  .recipes-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .no-saved {
+    padding: 2rem 1rem;
+  }
+  
+  .no-saved h3 {
+    font-size: 1.3rem;
+  }
+  
+  .no-saved p {
+    font-size: 1rem;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .saved-recipes {
+    background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+  }
+  
+  .saved-recipes h1 {
+    color: #e2e8f0;
+  }
+  
+  .saved-count {
+    color: #a0aec0;
+  }
+  
+  .auth-required h2 {
+    color: #e2e8f0;
+  }
+  
+  .no-saved {
+    background: #2d3748;
+    color: #e2e8f0;
+  }
+  
+  .no-saved h3 {
+    color: #e2e8f0;
+  }
+  
+  .no-saved p {
+    color: #a0aec0;
+  }
+}
+
+/* Animation for smooth content appearance */
+.saved-recipes .container > * {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Print Styles */
+@media print {
+  .saved-recipes {
+    background: white !important;
+    padding: 0;
+  }
+  
+  .recipes-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  .recipe-card:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+}
