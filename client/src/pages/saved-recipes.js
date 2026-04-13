@@ -3,7 +3,7 @@ import { useAuth } from '../hooks/useAuth';
 import { getSavedRecipes } from '../services/api';
 import RecipeCard from '../components/RecipeCard';
 import './SavedRecipes.css';
-import { toast } from 'react-toastify';
+
 
 const SavedRecipes = () => {
   const { currentUser } = useAuth();
