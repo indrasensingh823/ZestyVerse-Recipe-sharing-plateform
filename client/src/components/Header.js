@@ -12,7 +12,6 @@ import {
   FaUser,
   FaSignOutAlt,
   FaSignInAlt,
-  FaUserPlus,
   FaChevronDown,
   FaUtensils
 } from 'react-icons/fa';
