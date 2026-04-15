@@ -1,5 +1,5 @@
 // src/pages/Home.js
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../hooks/useAuth';
 import { getRecipes, likeRecipe, saveRecipe } from '../services/api';
@@ -7,6 +7,7 @@ import RecipeCard from '../components/RecipeCard';
 import "./Home.css";
 import { toast } from 'react-toastify';
 import Footer from '../components/Footer';
+
 
 const Home = () => {
   const { currentUser } = useAuth();
@@ -849,7 +850,7 @@ const Home = () => {
   const categories = ["All", "Breakfast", "Vegan", "Desserts", "Quick Bites", "Dinner"];
 
   // Fetch recipes from backend - FIXED VERSION
-  const fetchRecipes = async () => {
+const fetchRecipes = useCallback(async () => {
   try {
     setLoading(true);
     setError("");
@@ -862,13 +863,10 @@ const Home = () => {
 
     console.log("API Response:", response.data);
 
-    // ✅ FIXED FORMAT
     if (response.data && response.data.success && Array.isArray(response.data.recipes)) {
       const mongoRecipes = response.data.recipes;
-
       const allRecipes = [...mongoRecipes, ...manualRecipes];
       setRecipes(allRecipes);
-
     } else {
       console.log("Unexpected API format:", response.data);
       setRecipes(manualRecipes);
@@ -881,11 +879,11 @@ const Home = () => {
   } finally {
     setLoading(false);
   }
-};
+}, [selectedCategory]); 
 
-  useEffect(() => {
-    fetchRecipes();
-  }, [selectedCategory]);
+ useEffect(() => {
+  fetchRecipes();
+}, [fetchRecipes]); 
 
   // Carousel auto-rotate effect
   useEffect(() => {

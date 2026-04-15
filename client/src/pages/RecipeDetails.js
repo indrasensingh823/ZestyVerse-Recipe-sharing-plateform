@@ -1,7 +1,14 @@
-import React, { useState, useEffect } from 'react';
+// RecipeDetails.js
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { getRecipe, likeRecipe, saveRecipe, submitFeedback, getRecipeFeedback } from '../services/api';
+import {
+  getRecipe,
+  likeRecipe,
+  saveRecipe,
+  submitFeedback,
+  getRecipeFeedback
+} from '../services/api';
 import FeedbackForm from '../components/FeedbackForm';
 import { toast } from 'react-toastify';
 import './RecipeDetails.css';
@@ -10,14 +17,14 @@ const RecipeDetails = () => {
   const { id } = useParams();
   const { currentUser } = useAuth();
   const navigate = useNavigate();
-  
+
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [feedback, setFeedback] = useState([]);
   const [showFeedbackForm, setShowFeedbackForm] = useState(false);
 
-  // Manual recipes data (same as in Home.js)
+    // Manual recipes data (same as in Home.js)
   const manualRecipes = [
     {
       _id: "manual1",
@@ -815,378 +822,175 @@ const RecipeDetails = () => {
     // Add more manual recipes as needed...
   ];
 
-  useEffect(() => {
-    fetchRecipeData();
-    if (!id.startsWith('manual')) {
-      fetchFeedback();
-    }
-  }, [id]);
-
-  const fetchRecipeData = async () => {
+  // 🔥 FETCH RECIPE
+  const fetchRecipeData = useCallback(async () => {
     try {
       setLoading(true);
       setError('');
-      
-      // First check if it's a manual recipe
-      const manualRecipe = manualRecipes.find(recipe => recipe._id === id);
+
+      const manualRecipe = manualRecipes.find(r => r._id === id);
       if (manualRecipe) {
         setRecipe(manualRecipe);
-        setLoading(false);
         return;
       }
 
-      // If not manual, try to fetch from MongoDB
-      try {
-        const response = await getRecipe(id);
-        if (response.data && response.data.recipe) {
-          setRecipe(response.data.recipe);
-        } else {
-          throw new Error('Recipe not found in database');
-        }
-      } catch (dbError) {
-        console.error('Error fetching from MongoDB:', dbError);
-        // If MongoDB fails, check manual recipes again
-        const fallbackRecipe = manualRecipes.find(recipe => recipe._id === id);
-        if (fallbackRecipe) {
-          setRecipe(fallbackRecipe);
-        } else {
-          setError('Recipe not found. It may have been removed or does not exist.');
-        }
+      const res = await getRecipe(id);
+
+      if (res?.data?.recipe) {
+        setRecipe(res.data.recipe);
+      } else {
+        throw new Error('Recipe not found');
       }
-    } catch (error) {
-      console.error('Error fetching recipe:', error);
-      setError('Failed to load recipe. Please try again.');
+
+    } catch (err) {
+      console.error(err);
+
+      const fallback = manualRecipes.find(r => r._id === id);
+      if (fallback) {
+        setRecipe(fallback);
+      } else {
+        setError('Recipe not found');
+      }
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
 
-  const fetchFeedback = async () => {
-    if (id.startsWith('manual')) {
-      // Manual recipes don't have feedback in database
-      setFeedback([]);
-      return;
-    }
+  // 🔥 FETCH FEEDBACK
+  const fetchFeedback = useCallback(async () => {
+    if (id.startsWith('manual')) return;
 
     try {
-      const response = await getRecipeFeedback(id);
-      if (response.data) {
-        setFeedback(response.data);
-      }
-    } catch (error) {
-      console.error('Error fetching feedback:', error);
+      const res = await getRecipeFeedback(id);
+      setFeedback(res?.data || []);
+    } catch (err) {
+      console.error(err);
     }
-  };
+  }, [id]);
 
+  useEffect(() => {
+    fetchRecipeData();
+    fetchFeedback();
+  }, [fetchRecipeData, fetchFeedback]);
+
+  // 🔥 ACTIONS
   const handleLike = async () => {
-    if (!currentUser) {
-      toast.error('Please login to like recipes');
-      navigate('/auth');
-      return;
-    }
+    if (!currentUser) return toast.error('Login required');
 
     if (id.startsWith('manual')) {
-      toast.error('This is a sample recipe. Likes are not saved for demonstration recipes.');
-      return;
+      return toast.error('Demo recipe');
     }
 
     try {
-      const response = await likeRecipe(recipe._id, { userId: currentUser.uid });
-      if (response.data && response.data.recipe) {
-        setRecipe(response.data.recipe);
-      }
-    } catch (error) {
-      console.error('Error liking recipe:', error);
-      toast.error('Failed to like recipe. Please try again.');
+      const res = await likeRecipe(recipe._id, { userId: currentUser.uid });
+      setRecipe(res.data.recipe);
+    } catch {
+      toast.error('Like failed');
     }
   };
 
   const handleSave = async () => {
-    if (!currentUser) {
-      toast.error('Please login to save recipes');
-      navigate('/auth');
-      return;
-    }
+    if (!currentUser) return toast.error('Login required');
 
     if (id.startsWith('manual')) {
-      toast.error('This is a sample recipe. Saving is not available for demonstration recipes.');
-      return;
+      return toast.error('Demo recipe');
     }
 
     try {
-      const response = await saveRecipe(recipe._id, { userId: currentUser.uid });
-      if (response.data && response.data.recipe) {
-        setRecipe(response.data.recipe);
-      }
-    } catch (error) {
-      console.error('Error saving recipe:', error);
-      toast.error('Failed to save recipe. Please try again.');
+      const res = await saveRecipe(recipe._id, { userId: currentUser.uid });
+      setRecipe(res.data.recipe);
+    } catch {
+      toast.error('Save failed');
     }
   };
 
   const handleShare = () => {
-    const recipeUrl = `${window.location.origin}/recipe/${recipe._id}`;
-    
-    if (navigator.share) {
-      navigator.share({
-        title: recipe.title,
-        text: recipe.description,
-        url: recipeUrl,
-      });
-    } else {
-      navigator.clipboard.writeText(recipeUrl);
-      toast.success('Recipe link copied to clipboard!');
-    }
+    const url = window.location.href;
+    navigator.clipboard.writeText(url);
+    toast.success('Copied!');
   };
 
-  const handleFeedbackSubmit = async (feedbackData) => {
-    if (id.startsWith('manual')) {
-      toast.error('This is a sample recipe. Feedback is not available for demonstration recipes.');
-      return;
-    }
-
+  const handleFeedbackSubmit = async (data) => {
     try {
-      await submitFeedback(feedbackData);
-      setShowFeedbackForm(false);
+      await submitFeedback(data);
       fetchFeedback();
-    } catch (error) {
-      console.error('Error submitting feedback:', error);
-      toast.error('Failed to submit feedback. Please try again.');
+      setShowFeedbackForm(false);
+    } catch {
+      toast.error('Feedback failed');
     }
   };
 
-  if (loading) {
-    return (
-      <div className="recipe-details-loading">
-        <div className="loading-spinner"></div>
-        <p>Loading recipe...</p>
-      </div>
-    );
-  }
+  // 🔥 STATES
+  if (loading) return <div className="loading">Loading...</div>;
 
   if (error || !recipe) {
     return (
-      <div className="recipe-details-error">
-        <div className="error-content">
-          <h2>Recipe Not Found</h2>
-          <p>{error || 'The recipe you are looking for does not exist.'}</p>
-          <div className="error-actions">
-            <Link to="/" className="back-home-btn">Back to Home</Link>
-            <button onClick={fetchRecipeData} className="retry-btn">Try Again</button>
-          </div>
-        </div>
+      <div className="error">
+        <h2>{error}</h2>
+        <Link to="/">Go Home</Link>
       </div>
     );
   }
 
-  const isLiked = currentUser && recipe.likes && recipe.likes.includes(currentUser.uid);
-  const isSaved = currentUser && recipe.savedBy && recipe.savedBy.includes(currentUser.uid);
-  const isManualRecipe = id.startsWith('manual');
+  const isLiked = currentUser && recipe.likes?.includes(currentUser.uid);
+  const isSaved = currentUser && recipe.savedBy?.includes(currentUser.uid);
+  const isManual = id.startsWith('manual');
 
   return (
     <div className="recipe-details">
-      <div className="recipe-details-container">
-        {/* Recipe Header */}
-        <div className="recipe-header">
-          <div className="recipe-image-section">
-            <img 
-              src={recipe.image} 
-              alt={recipe.title} 
-              className="recipe-hero-image" 
-              onError={(e) => {
-                e.target.src = 'https://via.placeholder.com/800x600/667eea/ffffff?text=Recipe+Image';
-              }}
-            />
-            {isManualRecipe && (
-              <div className="demo-badge">
-                <span>Sample Recipe</span>
-              </div>
-            )}
-          </div>
-          
-          <div className="recipe-info">
-            <div className="recipe-title-section">
-              <h1>{recipe.title}</h1>
-              <p className="recipe-description">{recipe.description}</p>
-            </div>
-            
-            <div className="recipe-meta-grid">
-              <div className="meta-item">
-                <span className="meta-icon">🕒</span>
-                <div className="meta-content">
-                  <span className="meta-label">Cooking Time</span>
-                  <span className="meta-value">{recipe.cookingTime || 30} minutes</span>
-                </div>
-              </div>
-              
-              <div className="meta-item">
-                <span className="meta-icon">👥</span>
-                <div className="meta-content">
-                  <span className="meta-label">Servings</span>
-                  <span className="meta-value">{recipe.servings || 4} people</span>
-                </div>
-              </div>
-              
-              <div className="meta-item">
-                <span className="meta-icon">📊</span>
-                <div className="meta-content">
-                  <span className="meta-label">Difficulty</span>
-                  <span className="meta-value">{recipe.difficulty || 'Medium'}</span>
-                </div>
-              </div>
-              
-              <div className="meta-item">
-                <span className="meta-icon">🏷️</span>
-                <div className="meta-content">
-                  <span className="meta-label">Category</span>
-                  <span className="meta-value">{recipe.category || 'General'}</span>
-                </div>
-              </div>
-            </div>
+      <h1>{recipe.title}</h1>
+      <img src={recipe.image} alt={recipe.title} />
 
-            <div className="recipe-actions">
-              <button 
-                onClick={handleLike}
-                className={`action-btn like-btn ${isLiked ? 'liked' : ''} ${isManualRecipe ? 'disabled' : ''}`}
-                disabled={!currentUser || isManualRecipe}
-                title={isManualRecipe ? "Not available for sample recipes" : "Like this recipe"}
-              >
-                <span className="btn-icon">{isLiked ? '❤️' : '🤍'}</span>
-                <span className="btn-text">
-                  {recipe.likes ? recipe.likes.length : 0} Likes
-                </span>
-              </button>
-              
-              <button 
-                onClick={handleSave}
-                className={`action-btn save-btn ${isSaved ? 'saved' : ''} ${isManualRecipe ? 'disabled' : ''}`}
-                disabled={!currentUser || isManualRecipe}
-                title={isManualRecipe ? "Not available for sample recipes" : "Save this recipe"}
-              >
-                <span className="btn-icon">{isSaved ? '⭐' : '☆'}</span>
-                <span className="btn-text">
-                  {isSaved ? 'Saved' : 'Save'}
-                </span>
-              </button>
-              
-              <button 
-                onClick={handleShare}
-                className="action-btn share-btn"
-                title="Share this recipe"
-              >
-                <span className="btn-icon">🔗</span>
-                <span className="btn-text">Share</span>
-              </button>
+      <p>{recipe.description}</p>
 
-              {!isManualRecipe && (
-                <button 
-                  onClick={() => setShowFeedbackForm(true)}
-                  className="action-btn feedback-btn"
-                  disabled={!currentUser}
-                  title="Give feedback on this recipe"
-                >
-                  <span className="btn-icon">💬</span>
-                  <span className="btn-text">Feedback</span>
-                </button>
-              )}
-            </div>
+      <div className="actions">
+        <button onClick={handleLike} disabled={isManual}>
+          {isLiked ? '❤️' : '🤍'}
+        </button>
 
-            <div className="recipe-author">
-              <span className="author-label">Recipe by:</span>
-              <span className="author-name">{recipe.createdBy || 'ZestyVerse Community'}</span>
-            </div>
-          </div>
-        </div>
+        <button onClick={handleSave} disabled={isManual}>
+          {isSaved ? '⭐' : '☆'}
+        </button>
 
-        {/* Recipe Content */}
-        <div className="recipe-content">
-          <div className="ingredients-section">
-            <h2>Ingredients</h2>
-            <div className="ingredients-card">
-              <ul className="ingredients-list">
-                {recipe.ingredients && recipe.ingredients.map((ingredient, index) => (
-                  <li key={index} className="ingredient-item">
-                    <span className="ingredient-quantity">{ingredient.quantity}</span>
-                    <span className="ingredient-unit">{ingredient.unit}</span>
-                    <span className="ingredient-name">{ingredient.name}</span>
-                  </li>
-                ))}
-              </ul>
-              {(!recipe.ingredients || recipe.ingredients.length === 0) && (
-                <p className="no-data">No ingredients listed for this recipe.</p>
-              )}
-            </div>
-          </div>
-
-          <div className="instructions-section">
-            <h2>Instructions</h2>
-            <div className="instructions-card">
-              <ol className="instructions-list">
-                {recipe.instructions && recipe.instructions.map((instruction, index) => (
-                  <li key={index} className="instruction-item">
-                    <div className="step-number">Step {instruction.step || index + 1}</div>
-                    <div className="step-description">{instruction.description}</div>
-                  </li>
-                ))}
-              </ol>
-              {(!recipe.instructions || recipe.instructions.length === 0) && (
-                <p className="no-data">No instructions available for this recipe.</p>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Feedback Section (Only for non-manual recipes) */}
-        {!isManualRecipe && (
-          <div className="feedback-section">
-            <div className="feedback-header">
-              <h2>Feedback & Reviews</h2>
-              <p>Share your experience with this recipe</p>
-            </div>
-            
-            {currentUser && showFeedbackForm && (
-              <FeedbackForm 
-                onSubmit={handleFeedbackSubmit}
-                onCancel={() => setShowFeedbackForm(false)}
-                recipeId={recipe._id}
-              />
-            )}
-
-            <div className="feedback-list">
-              {feedback.length > 0 ? (
-                feedback.map(item => (
-                  <div key={item._id} className="feedback-item">
-                    <div className="feedback-header">
-                      <div className="user-info">
-                        <strong>{item.userName}</strong>
-                        <span className="rating">⭐ {item.rating}/5</span>
-                      </div>
-                      <small className="feedback-date">
-                        {new Date(item.createdAt).toLocaleDateString()}
-                      </small>
-                    </div>
-                    <p className="feedback-comment">{item.comment}</p>
-                  </div>
-                ))
-              ) : (
-                <div className="no-feedback">
-                  <p>No feedback yet. Be the first to review this recipe!</p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Navigation */}
-        <div className="recipe-navigation">
-          <button onClick={() => navigate(-1)} className="nav-btn back-btn">
-            ← Back to Previous
-          </button>
-          <Link to="/" className="nav-btn home-btn">
-            🏠 Back to Home
-          </Link>
-        </div>
+        <button onClick={handleShare}>🔗 Share</button>
       </div>
+
+      <h2>Ingredients</h2>
+      <ul>
+        {recipe.ingredients?.map((i, idx) => (
+          <li key={idx}>{i.name}</li>
+        ))}
+      </ul>
+
+      <h2>Instructions</h2>
+      <ol>
+        {recipe.instructions?.map((s, idx) => (
+          <li key={idx}>{s.description}</li>
+        ))}
+      </ol>
+
+      {!isManual && (
+        <>
+          <button onClick={() => setShowFeedbackForm(true)}>Feedback</button>
+
+          {showFeedbackForm && (
+            <FeedbackForm
+              recipeId={recipe._id}
+              onSubmit={handleFeedbackSubmit}
+              onCancel={() => setShowFeedbackForm(false)}
+            />
+          )}
+
+          <div>
+            {feedback.map(f => (
+              <div key={f._id}>
+                <b>{f.userName}</b> ⭐ {f.rating}
+                <p>{f.comment}</p>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 };
