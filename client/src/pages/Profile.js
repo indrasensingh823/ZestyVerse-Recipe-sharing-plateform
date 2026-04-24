@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { getRecipes } from '../services/api';
@@ -11,7 +11,7 @@ const Profile = () => {
   const [userRecipes, setUserRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('recipes');
-  const [error, setError] = useState(null); // ✅ added like saved-recipes
+  const [error, setError] = useState(null);
 
   // 🔒 Redirect if not logged in
   useEffect(() => {
@@ -20,31 +20,19 @@ const Profile = () => {
     }
   }, [currentUser, navigate]);
 
-  // 🔄 Fetch recipes when user changes (same pattern)
-  useEffect(() => {
-    if (currentUser?.uid) {
-      fetchUserRecipes();
-    } else {
-      setUserRecipes([]);
-      setLoading(false);
-    }
-  }, [currentUser]);
-
-  // 📡 API Call (updated like saved-recipes)
-  const fetchUserRecipes = async () => {
+  // 📡 API Call (FIXED with useCallback)
+  const fetchUserRecipes = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
 
       const response = await getRecipes();
 
-      // ✅ Safe extraction (same as saved-recipes)
       const allRecipes =
         response?.data?.recipes ||
         response?.data ||
         [];
 
-      // ✅ Filter current user recipes
       const filtered = Array.isArray(allRecipes)
         ? allRecipes.filter(
             (recipe) =>
@@ -59,7 +47,6 @@ const Profile = () => {
     } catch (err) {
       console.error('❌ Error fetching user recipes:', err);
 
-      // ✅ Better error handling (same as saved-recipes)
       if (err?.response?.data?.message) {
         setError(err.response.data.message);
       } else if (err?.message) {
@@ -72,12 +59,21 @@ const Profile = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentUser]); // ✅ dependency added properly
+
+  // 🔄 Fetch recipes when user changes (FIXED)
+  useEffect(() => {
+    if (currentUser?.uid) {
+      fetchUserRecipes();
+    } else {
+      setUserRecipes([]);
+      setLoading(false);
+    }
+  }, [currentUser, fetchUserRecipes]); // ✅ FIXED
 
   // Prevent render until redirect handled
   if (!currentUser) return null;
 
-  // ✅ Safe stats calculation
   const stats = {
     recipes: userRecipes.length,
     likes: userRecipes.reduce(
@@ -188,7 +184,6 @@ const Profile = () => {
         {/* TAB CONTENT */}
         <div className="tab-content">
 
-          {/* My Recipes */}
           {activeTab === 'recipes' && (
             <div className="recipes-tab">
 
@@ -197,7 +192,6 @@ const Profile = () => {
                 <p>Recipes you've created and shared</p>
               </div>
 
-              {/* ❗ Error UI */}
               {error && (
                 <div className="error-box">
                   <p>{error}</p>
@@ -278,7 +272,6 @@ const Profile = () => {
             </div>
           )}
 
-          {/* Saved */}
           {activeTab === 'saved' && (
             <div className="saved-tab">
               <h2>Saved Recipes</h2>
@@ -286,7 +279,6 @@ const Profile = () => {
             </div>
           )}
 
-          {/* Settings */}
           {activeTab === 'settings' && (
             <div className="settings-tab">
               <h2>Settings</h2>

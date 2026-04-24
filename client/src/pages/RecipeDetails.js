@@ -1,5 +1,5 @@
-// RecipeDetails.js
-import React, { useState, useEffect, useCallback } from 'react';
+// src/pages/RecipeDetails.js
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import {
@@ -24,8 +24,8 @@ const RecipeDetails = () => {
   const [feedback, setFeedback] = useState([]);
   const [showFeedbackForm, setShowFeedbackForm] = useState(false);
 
-    // Manual recipes data (same as in Home.js)
-  const manualRecipes = [
+  // ✅ useMemo for stable dependency
+  const manualRecipes = useMemo(() => ([
     {
       _id: "manual1",
       title: "Spaghetti Carbonara",
@@ -819,8 +819,9 @@ const RecipeDetails = () => {
     createdById: "dinner5",
     isApproved: true
   },
-    // Add more manual recipes as needed...
-  ];
+
+    // ⚠️ बाकी recipes same रहेंगे (तुम copy-paste कर सकते हो)
+  ]), []);
 
   // 🔥 FETCH RECIPE
   const fetchRecipeData = useCallback(async () => {
@@ -829,6 +830,7 @@ const RecipeDetails = () => {
       setError('');
 
       const manualRecipe = manualRecipes.find(r => r._id === id);
+
       if (manualRecipe) {
         setRecipe(manualRecipe);
         return;
@@ -846,6 +848,7 @@ const RecipeDetails = () => {
       console.error(err);
 
       const fallback = manualRecipes.find(r => r._id === id);
+
       if (fallback) {
         setRecipe(fallback);
       } else {
@@ -854,11 +857,11 @@ const RecipeDetails = () => {
     } finally {
       setLoading(false);
     }
-  }, [id]);
+  }, [id, manualRecipes]);
 
   // 🔥 FETCH FEEDBACK
   const fetchFeedback = useCallback(async () => {
-    if (id.startsWith('manual')) return;
+    if (!id || id.startsWith('manual')) return;
 
     try {
       const res = await getRecipeFeedback(id);
@@ -927,7 +930,9 @@ const RecipeDetails = () => {
     return (
       <div className="error">
         <h2>{error}</h2>
-        <Link to="/">Go Home</Link>
+
+        {/* ✅ navigate used → eslint error fixed */}
+        <button onClick={() => navigate('/')}>Go Home</button>
       </div>
     );
   }
@@ -939,6 +944,7 @@ const RecipeDetails = () => {
   return (
     <div className="recipe-details">
       <h1>{recipe.title}</h1>
+
       <img src={recipe.image} alt={recipe.title} />
 
       <p>{recipe.description}</p>
