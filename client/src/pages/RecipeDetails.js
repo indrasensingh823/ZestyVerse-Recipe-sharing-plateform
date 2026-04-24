@@ -25,7 +25,7 @@ const RecipeDetails = () => {
   const [showFeedbackForm, setShowFeedbackForm] = useState(false);
 
   // ✅ useMemo for stable dependency
-  const manualRecipes = useMemo(() => ([
+const manualRecipes = useMemo(() => ([
     {
       _id: "manual1",
       title: "Spaghetti Carbonara",
@@ -824,40 +824,38 @@ const RecipeDetails = () => {
   ]), []);
 
   // 🔥 FETCH RECIPE
-  const fetchRecipeData = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError('');
+ const fetchRecipeData = useCallback(async () => {
+  try {
+    setLoading(true);
+    setError('');
 
-      const manualRecipe = manualRecipes.find(r => r._id === id);
-
-      if (manualRecipe) {
-        setRecipe(manualRecipe);
-        return;
-      }
-
-      const res = await getRecipe(id);
-
-      if (res?.data?.recipe) {
-        setRecipe(res.data.recipe);
-      } else {
-        throw new Error('Recipe not found');
-      }
-
-    } catch (err) {
-      console.error(err);
-
-      const fallback = manualRecipes.find(r => r._id === id);
-
-      if (fallback) {
-        setRecipe(fallback);
-      } else {
-        setError('Recipe not found');
-      }
-    } finally {
-      setLoading(false);
+    const manualRecipe = manualRecipes.find(r => r._id === id);
+    if (manualRecipe) {
+      setRecipe(manualRecipe);
+      return;
     }
-  }, [id, manualRecipes]);
+
+    const res = await getRecipe(id);
+
+    if (res?.data?.recipe) {
+      setRecipe(res.data.recipe);
+    } else {
+      throw new Error('Recipe not found');
+    }
+
+  } catch (err) {
+    console.error(err);
+
+    const fallback = manualRecipes.find(r => r._id === id);
+    if (fallback) {
+      setRecipe(fallback);
+    } else {
+      setError('Recipe not found');
+    }
+  } finally {
+    setLoading(false);
+  }
+}, [id, manualRecipes]); // ✅ fixed
 
   // 🔥 FETCH FEEDBACK
   const fetchFeedback = useCallback(async () => {

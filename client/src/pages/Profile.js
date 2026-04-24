@@ -21,55 +21,56 @@ const Profile = () => {
   }, [currentUser, navigate]);
 
   // 📡 API Call (FIXED with useCallback)
-  const fetchUserRecipes = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
+  // ✅ wrap in useCallback
+const fetchUserRecipes = useCallback(async () => {
+  try {
+    setLoading(true);
+    setError(null);
 
-      const response = await getRecipes();
+    const response = await getRecipes();
 
-      const allRecipes =
-        response?.data?.recipes ||
-        response?.data ||
-        [];
+    const allRecipes =
+      response?.data?.recipes ||
+      response?.data ||
+      [];
 
-      const filtered = Array.isArray(allRecipes)
-        ? allRecipes.filter(
-            (recipe) =>
-              recipe?.createdById &&
-              currentUser?.uid &&
-              String(recipe.createdById) === String(currentUser.uid)
-          )
-        : [];
+    const filtered = Array.isArray(allRecipes)
+      ? allRecipes.filter(
+          (recipe) =>
+            recipe?.createdById &&
+            currentUser?.uid &&
+            String(recipe.createdById) === String(currentUser.uid)
+        )
+      : [];
 
-      setUserRecipes(filtered);
+    setUserRecipes(filtered);
 
-    } catch (err) {
-      console.error('❌ Error fetching user recipes:', err);
+  } catch (err) {
+    console.error('❌ Error fetching user recipes:', err);
 
-      if (err?.response?.data?.message) {
-        setError(err.response.data.message);
-      } else if (err?.message) {
-        setError(err.message);
-      } else {
-        setError('Failed to load recipes');
-      }
-
-      setUserRecipes([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [currentUser]); // ✅ dependency added properly
-
-  // 🔄 Fetch recipes when user changes (FIXED)
-  useEffect(() => {
-    if (currentUser?.uid) {
-      fetchUserRecipes();
+    if (err?.response?.data?.message) {
+      setError(err.response.data.message);
+    } else if (err?.message) {
+      setError(err.message);
     } else {
-      setUserRecipes([]);
-      setLoading(false);
+      setError('Failed to load recipes');
     }
-  }, [currentUser, fetchUserRecipes]); // ✅ FIXED
+
+    setUserRecipes([]);
+  } finally {
+    setLoading(false);
+  }
+}, [currentUser]); 
+  // 🔄 Fetch recipes when user changes (FIXED)
+ // ✅ FIXED useEffect
+useEffect(() => {
+  if (currentUser?.uid) {
+    fetchUserRecipes();
+  } else {
+    setUserRecipes([]);
+    setLoading(false);
+  }
+}, [currentUser, fetchUserRecipes]); 
 
   // Prevent render until redirect handled
   if (!currentUser) return null;

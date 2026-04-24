@@ -23,7 +23,7 @@ const SavedRecipes = () => {
   }, [currentUser]);
 
   // 📡 API Call
-  const fetchSavedRecipes = async () => {
+  const fetchSavedRecipes = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -47,7 +47,12 @@ const SavedRecipes = () => {
     } finally {
       setLoading(false);
     }
-  };
+}, [currentUser]);
+
+
+useEffect(() => {
+  fetchSavedRecipes();
+}, [fetchSavedRecipes]);
 
   // 🔄 Update single recipe (like/save changes)
   const handleRecipeUpdate = (updatedRecipe) => {
