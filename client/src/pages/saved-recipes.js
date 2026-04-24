@@ -1,5 +1,5 @@
 // saved-recipes.js
-import React, { useState, useEffect, } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { getSavedRecipes } from '../services/api';
 import RecipeCard from '../components/RecipeCard';
@@ -12,19 +12,11 @@ const SavedRecipes = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 🔄 Fetch saved recipes when user changes
-  useEffect(() => {
-    if (currentUser?.uid) {
-      fetchSavedRecipes();
-    } else {
-      setSavedRecipes([]);
-      setLoading(false);
-    }
-  }, [currentUser]);
-
-  // 📡 API Call
+  // 📡 API Call (wrapped in useCallback)
   const fetchSavedRecipes = useCallback(async () => {
     try {
+      if (!currentUser?.uid) return;
+
       setLoading(true);
       setError(null);
 
@@ -36,7 +28,6 @@ const SavedRecipes = () => {
     } catch (err) {
       console.error('❌ Error fetching saved recipes:', err);
 
-      // ✅ Better error handling
       if (err?.response?.data?.message) {
         setError(err.response.data.message);
       } else if (err?.message) {
@@ -47,12 +38,17 @@ const SavedRecipes = () => {
     } finally {
       setLoading(false);
     }
-}, [currentUser]);
+  }, [currentUser]);
 
-
-useEffect(() => {
-  fetchSavedRecipes();
-}, [fetchSavedRecipes]);
+  // 🔄 Fetch when user changes
+  useEffect(() => {
+    if (currentUser?.uid) {
+      fetchSavedRecipes();
+    } else {
+      setSavedRecipes([]);
+      setLoading(false);
+    }
+  }, [currentUser, fetchSavedRecipes]); // ✅ fixed dependency
 
   // 🔄 Update single recipe (like/save changes)
   const handleRecipeUpdate = (updatedRecipe) => {
