@@ -11,7 +11,7 @@ import Footer from '../components/Footer';
 
 const Home = () => {
   const { currentUser } = useAuth();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
