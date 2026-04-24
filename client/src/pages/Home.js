@@ -1,5 +1,5 @@
 // src/pages/Home.js
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../hooks/useAuth';
 import { getRecipes, likeRecipe, saveRecipe } from '../services/api';
@@ -23,7 +23,7 @@ const Home = () => {
   const [currentCarouselIndex, setCurrentCarouselIndex] = useState(0);
 
   // Enhanced manual recipes with proper structure
-  const manualRecipes = [
+const manualRecipes = useMemo(() => [
     {
       _id: "manual1",
       title: "Spaghetti Carbonara",
@@ -782,7 +782,7 @@ const Home = () => {
   },
   
 
-  ];
+], []);
 
   // Fixed carousel images with proper URLs
   const carouselImages = [
@@ -855,7 +855,7 @@ const fetchRecipes = useCallback(async () => {
   } finally {
     setLoading(false);
   }
-}, [selectedCategory]); // ❗ REMOVE manualRecipes from dependency
+}, [selectedCategory, manualRecipes ]); // ❗ REMOVE manualRecipes from dependency
 
  useEffect(() => {
   fetchRecipes();
