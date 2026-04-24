@@ -108,7 +108,7 @@ const Home = () => {
     },
     
   {
-    _id: "breakfast1",
+    _id: "breakfast2",
     title: "Masala Dosa",
     image: "https://example.com/images/masala-dosa.jpg",
     description: "A crispy, golden crepe made from fermented rice and lentil batter, stuffed with a spiced potato filling.",
@@ -136,7 +136,7 @@ const Home = () => {
     isApproved: true
   },
   {
-    _id: "breakfast2",
+    _id: "breakfast3",
     title: "Poha",
     image: "https://example.com/images/poha.jpg",
     description: "Flattened rice cooked with onions, spices, and a hint of lemon, a classic Maharashtrian breakfast.",
@@ -163,34 +163,7 @@ const Home = () => {
     createdById: "breakfast2",
     isApproved: true
   },
-  {
-    _id: "breakfast3",
-    title: "Upma",
-    image: "https://example.com/images/upma.jpg",
-    description: "A savory porridge made from semolina, cooked with vegetables and tempered with spices.",
-    category: "Breakfast",
-    cookingTime: 20,
-    servings: 2,
-    difficulty: "Easy",
-    ingredients: [
-      { name: "Semolina (Rava)", quantity: "1", unit: "cup" },
-      { name: "Mixed Vegetables (peas, carrots)", quantity: "0.5", unit: "cup" },
-      { name: "Mustard Seeds", quantity: "1", unit: "tsp" },
-      { name: "Green Chilli", quantity: "1", unit: "" },
-      { name: "Curry Leaves", quantity: "1", unit: "sprig" }
-    ],
-    instructions: [
-      { step: 1, description: "Dry roast the semolina until fragrant and set aside." },
-      { step: 2, description: "In a pan, temper mustard seeds, add vegetables and sauté." },
-      { step: 3, description: "Add water and bring to a boil. Slowly stir in the roasted semolina." },
-      { step: 4, description: "Cook on low heat until the water is absorbed and the upma is thick." }
-    ],
-    likes: [],
-    savedBy: [],
-    createdBy: "Home Chef",
-    createdById: "breakfast3",
-    isApproved: true
-  },
+  
   {
     _id: "breakfast4",
     title: "Aloo Paratha",
@@ -851,35 +824,38 @@ const Home = () => {
 
   // Fetch recipes from backend - FIXED VERSION
 const fetchRecipes = useCallback(async () => {
-  try {
-    setLoading(true);
-    setError("");
+  setLoading(true);
+  setError("");
 
-    const filters = selectedCategory !== "All"
-      ? { category: selectedCategory }
-      : {};
+  try {
+    const filters =
+      selectedCategory !== "All"
+        ? { category: selectedCategory }
+        : {};
 
     const response = await getRecipes(filters);
 
-    console.log("API Response:", response.data);
+    console.log("API Response:", response);
 
-    if (response.data && response.data.success && Array.isArray(response.data.recipes)) {
-      const mongoRecipes = response.data.recipes;
-      const allRecipes = [...mongoRecipes, ...manualRecipes];
-      setRecipes(allRecipes);
+    // ✅ Safe optional chaining
+    const mongoRecipes = response?.data?.recipes;
+
+    if (response?.data?.success && Array.isArray(mongoRecipes)) {
+      setRecipes([...mongoRecipes, ...manualRecipes]);
     } else {
-      console.log("Unexpected API format:", response.data);
-      setRecipes(manualRecipes);
+      console.warn("Invalid API format, using manual recipes");
+      setRecipes([...manualRecipes]);
     }
 
-  } catch (error) {
-    console.error("Error fetching recipes:", error);
-    setError("Failed to load recipes from server. Showing sample recipes.");
-    setRecipes(manualRecipes);
+  } catch (err) {
+    console.error("Fetch error:", err);
+
+    setError("Server not responding. Showing local recipes.");
+    setRecipes([...manualRecipes]); // fallback
   } finally {
     setLoading(false);
   }
-}, [selectedCategory]); 
+}, [selectedCategory]); // ❗ REMOVE manualRecipes from dependency
 
  useEffect(() => {
   fetchRecipes();
@@ -918,109 +894,134 @@ const fetchRecipes = useCallback(async () => {
   };
 
   // Handle recipe actions - FIXED VERSION
-  const handleLike = async (recipeId, e) => {
-    if (e) e.stopPropagation();
-    
-    if (!currentUser) {
-      toast.error('Please login to like recipes');
-      navigate('/auth');
-      return;
-    }
+ const handleLike = async (recipeId, e) => {
+  if (e) e.stopPropagation();
 
-    try {
-      // Optimistic update first
-      setRecipes(prev => 
-        prev.map(recipe => {
-          if (recipe._id === recipeId) {
-            const isLiked = recipe.likes && recipe.likes.includes(currentUser.uid);
-            return {
-              ...recipe,
-              likes: isLiked 
-                ? recipe.likes.filter(id => id !== currentUser.uid)
-                : [...(recipe.likes || []), currentUser.uid]
-            };
-          }
-          return recipe;
-        })
-      );
+  if (!currentUser) {
+    toast.error('Please login to like recipes');
+    navigate('/auth');
+    return;
+  }
 
-      const response = await likeRecipe(recipeId, { 
-        userId: currentUser.uid,
-        userEmail: currentUser.email 
-      });
-      
-      console.log('Like response:', response.data);
-      
-      if (response.data.success && response.data.recipe) {
-        // Update with the recipe from database
-        setRecipes(prev => 
-          prev.map(recipe => 
-            recipe._id === recipeId ? response.data.recipe : recipe
-          )
-        );
-      }
-    } catch (error) {
-      console.error('Error in like:', error);
-      // Revert optimistic update on error
-      fetchRecipes();
-    }
-  };
+  // ❌ Prevent manual recipes API call
+  if (recipeId.startsWith("manual") || recipeId.startsWith("breakfast") || recipeId.startsWith("vegan") || recipeId.startsWith("dessert") || recipeId.startsWith("quickbite") || recipeId.startsWith("dinner")) {
+    toast.info("Demo recipe cannot be liked");
+    return;
+  }
 
-  const handleSave = async (recipeId, e) => {
-    if (e) e.stopPropagation();
-    
-    if (!currentUser) {
-      toast.error('Please login to save recipes');
-      navigate('/auth');
-      return;
-    }
+  try {
+    // ✅ Optimistic update
+    setRecipes(prev =>
+      prev.map(recipe => {
+        if (recipe._id === recipeId) {
+          const likes = recipe.likes || [];
+          const isLiked = likes.includes(currentUser.uid);
 
-    try {
-      // Optimistic update first
-      setRecipes(prev => 
-        prev.map(recipe => {
-          if (recipe._id === recipeId) {
-            const isSaved = recipe.savedBy && recipe.savedBy.includes(currentUser.uid);
-            return {
-              ...recipe,
-              savedBy: isSaved 
-                ? recipe.savedBy.filter(id => id !== currentUser.uid)
-                : [...(recipe.savedBy || []), currentUser.uid]
-            };
-          }
-          return recipe;
-        })
-      );
-
-      const response = await saveRecipe(recipeId, { 
-        userId: currentUser.uid,
-        userEmail: currentUser.email 
-      });
-      
-      console.log('Save response:', response.data);
-      
-      if (response.data.success) {
-        if (response.data.recipe) {
-          // Update with the recipe from database
-          setRecipes(prev => 
-            prev.map(recipe => 
-              recipe._id === recipeId ? response.data.recipe : recipe
-            )
-          );
+          return {
+            ...recipe,
+            likes: isLiked
+              ? likes.filter(id => id !== currentUser.uid)
+              : [...likes, currentUser.uid]
+          };
         }
-        alert(response.data.message);
-      }
-    } catch (error) {
-      console.error('Error in save:', error);
-      // Revert optimistic update on error
-      fetchRecipes();
-      if (error.response?.data?.message) {
-        alert(error.response.data.message);
-      } else {
-        toast.error('Error saving recipe. Please try again.');
-      }
+        return recipe;
+      })
+    );
+
+    const response = await likeRecipe(recipeId, {
+      userId: currentUser.uid,
+      userEmail: currentUser.email
+    });
+
+    console.log("Like response:", response.data);
+
+    if (response?.data?.success && response?.data?.recipe) {
+      setRecipes(prev =>
+        prev.map(recipe =>
+          recipe._id === recipeId ? response.data.recipe : recipe
+        )
+      );
     }
-  };
+
+  } catch (error) {
+    console.error("Like error:", error);
+
+    // ❗ revert
+    fetchRecipes();
+
+    toast.error("Error liking recipe");
+  }
+};
+
+const handleSave = async (recipeId, e) => {
+  if (e) e.stopPropagation();
+
+  if (!currentUser) {
+    toast.error('Please login to save recipes');
+    navigate('/auth');
+    return;
+  }
+
+  // ❌ Prevent manual recipes API call
+  if (recipeId.startsWith("manual") || recipeId.startsWith("breakfast") || recipeId.startsWith("vegan") || recipeId.startsWith("dessert") || recipeId.startsWith("quickbite") || recipeId.startsWith("dinner")) {
+    toast.info("Demo recipe cannot be saved");
+    return;
+  }
+
+  try {
+    let isSavedNow = false;
+
+    // ✅ Optimistic update
+    setRecipes(prev =>
+      prev.map(recipe => {
+        if (recipe._id === recipeId) {
+          const savedBy = recipe.savedBy || [];
+          const isSaved = savedBy.includes(currentUser.uid);
+
+          isSavedNow = !isSaved;
+
+          return {
+            ...recipe,
+            savedBy: isSaved
+              ? savedBy.filter(id => id !== currentUser.uid)
+              : [...savedBy, currentUser.uid]
+          };
+        }
+        return recipe;
+      })
+    );
+
+    const response = await saveRecipe(recipeId, {
+      userId: currentUser.uid,
+      userEmail: currentUser.email
+    });
+
+    console.log("Save response:", response.data);
+
+    if (response?.data?.success && response?.data?.recipe) {
+      setRecipes(prev =>
+        prev.map(recipe =>
+          recipe._id === recipeId ? response.data.recipe : recipe
+        )
+      );
+    }
+
+    // ✅ FIX: no undefined alert
+    toast.success(
+      isSavedNow
+        ? "Recipe saved ❤️"
+        : "Removed from saved ❌"
+    );
+
+  } catch (error) {
+    console.error("Save error:", error);
+
+    // ❗ revert
+    fetchRecipes();
+
+    toast.error("Error saving recipe");
+  }
+};
 
   const handleRecipeUpdate = (updatedRecipe) => {
     setRecipes(prev => 
