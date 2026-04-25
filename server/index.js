@@ -6,10 +6,8 @@ require('dotenv').config();
 
 const app = express();
 
-// ✅ IMPORT ROUTES
 const recipeRoutes = require('./src/routes/recipes');
 
-// ✅ IMPORT MODEL (ONLY ONCE - FIXED)
 const Recipe = require('./src/models/Recipe');
 
 // ==================== MIDDLEWARE ====================
@@ -45,7 +43,6 @@ mongoose.connect(MONGODB_URI)
 
 // ==================== EXTRA ROUTES (SAFE) ====================
 
-// (duplicate route conflict avoid करने के लिए अलग endpoint)
 app.get('/api/all-recipes', async (req, res) => {
   try {
     const recipes = await Recipe.find({ isApproved: true }).sort({ createdAt: -1 });
