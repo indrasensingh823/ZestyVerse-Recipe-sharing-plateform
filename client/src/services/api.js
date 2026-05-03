@@ -60,47 +60,47 @@ api.interceptors.response.use(
 // ==================== RECIPES API ====================
 export const getRecipes = (params = {}) => {
   console.log('📥 Fetching recipes with params:', params);
-  return api.get('/recipes', { params });
+  return api.get('/api/recipes', { params });
 };
 
 export const getRecipe = (id) => {
   console.log('📥 Fetching recipe:', id);
-  return api.get(`/recipes/${id}`);
+  return api.get(`/api/recipes/${id}`);
 };
 
 export const createRecipe = (recipeData) => {
   console.log('📝 Creating recipe:', recipeData.title);
-  return api.post('/recipes', recipeData);
+  return api.post('/api/recipes', recipeData);
 };
 
 export const updateRecipe = (id, recipeData) => {
   console.log('✏️ Updating recipe:', id);
-  return api.put(`/recipes/${id}`, recipeData);
+  return api.put(`/api/recipes/${id}`, recipeData);
 };
 
 export const likeRecipe = (id, data) => {
   console.log('❤️ Liking recipe:', id, 'by user:', data.userId);
-  return api.post(`/recipes/${id}/like`, data);
+  return api.post(`/api/recipes/${id}/like`, data);
 };
 
 export const saveRecipe = (id, data) => {
   console.log('💾 Saving recipe:', id, 'by user:', data.userId);
-  return api.post(`/recipes/${id}/save`, data);
+  return api.post(`/api/recipes/${id}/save`, data);
 };
 
 export const getSavedRecipes = (userId) => {
   console.log('📚 Fetching saved recipes for user:', userId);
-  return api.get(`/recipes/saved/${userId}`)
+  return api.get(`/api/recipes/saved/${userId}`)
 };
 
 export const getUserRecipes = (userId) => {
   console.log('👤 Fetching user recipes:', userId);
-  return api.get(`/recipes/user/${userId}`);
+  return api.get(`/api/recipes/user/${userId}`);
 };
 
 export const deleteRecipe = (id) => {
   console.log('🗑️ Deleting recipe:', id);
-  return api.delete(`/recipes/${id}`);
+  return api.delete(`/api/recipes/${id}`);
 };
 
 // ==================== AUTH API ====================
