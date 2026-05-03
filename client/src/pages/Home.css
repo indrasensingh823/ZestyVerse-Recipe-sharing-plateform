@@ -4,38 +4,81 @@
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 }
 
+/* Hero Section with Ken Burns Zoom & Animated Overlay */
 .hero-section {
   position: relative;
   height: 92vh;
-  background: url("https://itmt2evzl1.ufs.sh/f/bsRhdfxenzwIndYOHx82MqmQPtYyrfJNjvI834C1nSBWdKRE") no-repeat center/cover;
+  background: url("https://st.depositphotos.com/1026266/54582/i/450/depositphotos_545822748-stock-photo-open-recipe-book-with-food.jpg") no-repeat center/cover;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  color: #fff;
+  color: var(--white);
   overflow: hidden;
+  /* 🔥 Ken Burns zoom effect – background itself can't be animated directly, so we use a pseudo-element */
 }
 
-/* Dark gradient overlay */
+/* Pseudo-element for smooth zoom animation */
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: -5%;
+  left: -5%;
+  width: 110%;
+  height: 110%;
+  background: url("https://st.depositphotos.com/1026266/54582/i/450/depositphotos_545822748-stock-photo-open-recipe-book-with-food.jpg") no-repeat center/cover;
+  z-index: 0;
+  animation: kenBurnsZoom 20s ease-in-out infinite alternate;
+  filter: brightness(0.7);
+}
+
+/* 🔥 Ken Burns keyframes – slow zoom in/out */
+@keyframes kenBurnsZoom {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.08);
+  }
+}
+
+/* Overlay with animated gradient */
 .hero-overlay {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    135deg,
-    rgba(0, 0, 0, 0.7),
-    rgba(44, 62, 80, 0.6)
-  );
+  background: linear-gradient(135deg, rgba(0,0,0,0.7), rgba(44,62,80,0.6));
   backdrop-filter: blur(4px);
+  z-index: 1;
+  animation: gradientShift 10s ease infinite alternate;
 }
 
-/* Content */
+/* 🔥 Subtle gradient color shift animation */
+@keyframes gradientShift {
+  0% {
+    background: linear-gradient(135deg, rgba(0,0,0,0.7), rgba(44,62,80,0.6));
+  }
+  50% {
+    background: linear-gradient(135deg, rgba(0,0,0,0.75), rgba(52,73,94,0.65));
+  }
+  100% {
+    background: linear-gradient(135deg, rgba(0,0,0,0.68), rgba(102,126,234,0.5));
+  }
+}
+
+/* Hero content stays above overlay, with fade-up on load (already there) and optional hover effect */
 .hero-content {
   position: relative;
   z-index: 2;
   max-width: 700px;
-  padding: 20px;
-  animation: fadeUp 1s ease;
+  padding: 1.5rem;
+  animation: fadeUp 0.8s ease;
+  transition: transform 0.4s ease;
+}
+
+/* Subtle hover lift on content (optional) */
+.hero-content:hover {
+  transform: translateY(-5px);
 }
 
 /* Heading */
@@ -278,21 +321,116 @@
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
 }
 
-.recipe-image-container {
+/* ========== HOME.CSS - FULL IMAGE VISIBILITY FIXES ========== */
+
+/* ----- GLOBAL IMAGE RULES (ensure no cropping) ----- */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ----- RECIPE CARD IMAGES (override any cropping) ----- */
+.recipe-card-wrapper .recipe-image-container {
   position: relative;
-  height: 200px;
+  width: 100%;
+  aspect-ratio: 4 / 3;        /* consistent card height */
+  background: #f8f9fa;
   overflow: hidden;
 }
 
-.recipe-image {
+.recipe-card-wrapper .recipe-image {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;        /* 🔥 full image, no crop */
   transition: transform 0.3s ease;
 }
 
 .recipe-card-wrapper:hover .recipe-image {
-  transform: scale(1.05);
+  transform: scale(1.03);
+}
+
+/* ----- CAROUSEL IMAGES (full visibility + responsive) ----- */
+.carousel-item {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;       /* wide cinematic look, but shows full image */
+  background: #2d3748;
+  overflow: hidden;
+}
+
+.carousel-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;        /* full image visible, no cropping */
+  background: #f0f0f0;
+  transition: opacity 0.5s ease;
+}
+
+/* Optional: if you want carousel images to fill width without letterbox,
+   use object-fit: cover instead – but that crops. For full visibility, use contain. */
+
+/* ----- SEARCH POPUP IMAGES ----- */
+.search-popup .popup-item img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;        /* small avatar style, full image */
+  background: #fff;
+  border-radius: 8px;
+  margin-right: 12px;
+}
+
+/* ----- HERO SECTION BACKGROUND (if any) ----- */
+.hero-section {
+  position: relative;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  /* If you use a background image, add: */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* ----- FALLBACK FOR ANY OTHER IMAGES ----- */
+.recipe-image-container img,
+.category-card img,
+.testimonial-card img {
+  object-fit: contain !important;   
+}
+
+/* ----- RESPONSIVE ADJUSTMENTS ----- */
+@media (max-width: 768px) {
+  .recipe-card-wrapper .recipe-image-container {
+    aspect-ratio: 3 / 2;         
+  }
+  
+  .carousel-item {
+    aspect-ratio: 4 / 3;
+  }
+  
+  .search-popup .popup-item img {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .recipe-card-wrapper .recipe-image-container {
+    aspect-ratio: 1 / 1;         
+  }
+}
+
+/* ----- ACCESSIBILITY / LOADING STATES ----- */
+.recipe-image-container img[loading="lazy"] {
+  filter: blur(2px);
+  transition: filter 0.2s;
+}
+.recipe-image-container img.loaded {
+  filter: blur(0);
 }
 
 .recipe-overlay {

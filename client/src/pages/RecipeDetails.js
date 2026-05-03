@@ -24,105 +24,104 @@ const RecipeDetails = () => {
   const [feedback, setFeedback] = useState([]);
   const [showFeedbackForm, setShowFeedbackForm] = useState(false);
 
-  // ✅ useMemo for stable dependency
 const manualRecipes = useMemo(() => ([
-    {
-      _id: "manual1",
-      title: "Spaghetti Carbonara",
-      image: "https://assets.unileversolutions.com/recipes-v2/109396.jpg",
-      description: "A classic Italian pasta dish made with eggs, cheese, pancetta, and pepper.",
-      category: "Dinner",
-      cookingTime: 20,
-      servings: 4,
-      difficulty: "Medium",
-      ingredients: [
-        { name: "Spaghetti", quantity: "400", unit: "g" },
-        { name: "Eggs", quantity: "3", unit: "" },
-        { name: "Pancetta", quantity: "150", unit: "g" },
-        { name: "Parmesan Cheese", quantity: "100", unit: "g" },
-        { name: "Black Pepper", quantity: "1", unit: "tsp" },
-        { name: "Salt", quantity: "to taste", unit: "" }
-      ],
-      instructions: [
-        { step: 1, description: "Bring a large pot of salted water to boil and cook spaghetti according to package instructions." },
-        { step: 2, description: "While pasta cooks, fry pancetta in a large pan until crispy." },
-        { step: 3, description: "In a bowl, whisk eggs and grated Parmesan cheese together." },
-        { step: 4, description: "Drain pasta, reserving 1 cup of pasta water." },
-        { step: 5, description: "Quickly mix hot pasta with pancetta, then remove from heat." },
-        { step: 6, description: "Add egg and cheese mixture, stirring continuously to create a creamy sauce." },
-        { step: 7, description: "Add pasta water as needed to adjust consistency." },
-        { step: 8, description: "Season with black pepper and serve immediately." }
-      ],
-      likes: [],
-      savedBy: [],
-      createdBy: "Chef Mario",
-      createdById: "manual1",
-      isApproved: true
-    },
-    {
-      _id: "manual2",
-      title: "Vegan Buddha Bowl",
-      image: "https://simplyceecee.co/wp-content/uploads/2018/07/veganbuddhabowl-2.jpg",
-      description: "A nourishing bowl packed with fresh vegetables, grains, and a creamy dressing.",
-      category: "Vegan",
-      cookingTime: 15,
-      servings: 2,
-      difficulty: "Easy",
-      ingredients: [
-        { name: "Quinoa", quantity: "1", unit: "cup" },
-        { name: "Sweet Potato", quantity: "1", unit: "large" },
-        { name: "Avocado", quantity: "1", unit: "" },
-        { name: "Chickpeas", quantity: "1", unit: "can" },
-        { name: "Spinach", quantity: "2", unit: "cups" },
-        { name: "Tahini", quantity: "2", unit: "tbsp" },
-        { name: "Lemon Juice", quantity: "1", unit: "tbsp" }
-      ],
-      instructions: [
-        { step: 1, description: "Cook quinoa according to package instructions." },
-        { step: 2, description: "Roast sweet potato cubes in oven at 200°C for 20 minutes." },
-        { step: 3, description: "Rinse and drain chickpeas." },
-        { step: 4, description: "Prepare tahini dressing by mixing tahini, lemon juice, and water." },
-        { step: 5, description: "Arrange all ingredients in a bowl and drizzle with dressing." }
-      ],
-      likes: [],
-      savedBy: [],
-      createdBy: "Healthy Eats",
-      createdById: "manual2",
-      isApproved: true
-    },
-
-     {
-      _id: "breakfast1",
-      title: "Fluffy Pancakes",
-      image: "https://hips.hearstapps.com/hmg-prod/images/best-homemade-pancakes-index-640775a2dbad8.jpg",
-      description: "Fluffy pancakes served with maple syrup and fresh fruits.",
-      category: "Breakfast",
-      cookingTime: 15,
-      servings: 4,
-      difficulty: "Easy",
-      ingredients: [
-        { name: "Flour", quantity: "2", unit: "cups" },
-        { name: "Milk", quantity: "1.5", unit: "cups" },
-        { name: "Eggs", quantity: "2", unit: "" },
-        { name: "Baking Powder", quantity: "2", unit: "tsp" }
-      ],
-      instructions: [
-        { step: 1, description: "Mix dry ingredients in a bowl." },
-        { step: 2, description: "Add wet ingredients and mix gently." },
-        { step: 3, description: "Cook on griddle until bubbles form." },
-        { step: 4, description: "Flip and cook until golden brown." }
-      ],
-      likes: [],
-      savedBy: [],
-      createdBy: "Breakfast Club",
-      createdById: "breakfast1",
-      isApproved: true
-    },
-    
+  {
+    _id: "manual1",
+    title: "Spaghetti Carbonara",
+    image: "https://www.sipandfeast.com/wp-content/uploads/2022/09/spaghetti-carbonara-recipe-snippet.jpg",
+    description: "A classic Italian pasta dish made with eggs, cheese, pancetta, and pepper.",
+    category: "Dinner",
+    cookingTime: 20,
+    servings: 4,
+    difficulty: "Medium",
+    ingredients: [
+      { name: "Spaghetti", quantity: "400", unit: "g" },
+      { name: "Eggs", quantity: "3", unit: "" },
+      { name: "Pancetta", quantity: "150", unit: "g" },
+      { name: "Parmesan Cheese", quantity: "100", unit: "g" },
+      { name: "Black Pepper", quantity: "1", unit: "tsp" },
+      { name: "Salt", quantity: "to taste", unit: "" }
+    ],
+    instructions: [
+      { step: 1, description: "Bring a large pot of salted water to boil and cook spaghetti according to package instructions." },
+      { step: 2, description: "While pasta cooks, fry pancetta in a large pan until crispy." },
+      { step: 3, description: "In a bowl, whisk eggs and grated Parmesan cheese together." },
+      { step: 4, description: "Drain pasta, reserving 1 cup of pasta water." },
+      { step: 5, description: "Quickly mix hot pasta with pancetta, then remove from heat." },
+      { step: 6, description: "Add egg and cheese mixture, stirring continuously to create a creamy sauce." },
+      { step: 7, description: "Add pasta water as needed to adjust consistency." },
+      { step: 8, description: "Season with black pepper and serve immediately." }
+    ],
+    likes: [],
+    savedBy: [],
+    createdBy: "Chef Mario",
+    createdById: "manual1",
+    isApproved: true
+  },
+  {
+    _id: "manual2",
+    title: "Vegan Buddha Bowl",
+    image: "https://simplyceecee.co/wp-content/uploads/2018/07/veganbuddhabowl-2.jpg",
+    description: "A nourishing bowl packed with fresh vegetables, grains, and a creamy dressing.",
+    category: "Vegan",
+    cookingTime: 15,
+    servings: 2,
+    difficulty: "Easy",
+    ingredients: [
+      { name: "Quinoa", quantity: "1", unit: "cup" },
+      { name: "Sweet Potato", quantity: "1", unit: "large" },
+      { name: "Avocado", quantity: "1", unit: "" },
+      { name: "Chickpeas", quantity: "1", unit: "can" },
+      { name: "Spinach", quantity: "2", unit: "cups" },
+      { name: "Tahini", quantity: "2", unit: "tbsp" },
+      { name: "Lemon Juice", quantity: "1", unit: "tbsp" }
+    ],
+    instructions: [
+      { step: 1, description: "Cook quinoa according to package instructions." },
+      { step: 2, description: "Roast sweet potato cubes in oven at 200°C for 20 minutes." },
+      { step: 3, description: "Rinse and drain chickpeas." },
+      { step: 4, description: "Prepare tahini dressing by mixing tahini, lemon juice, and water." },
+      { step: 5, description: "Arrange all ingredients in a bowl and drizzle with dressing." }
+    ],
+    likes: [],
+    savedBy: [],
+    createdBy: "Healthy Eats",
+    createdById: "manual2",
+    isApproved: true
+  },
   {
     _id: "breakfast1",
+    title: "Fluffy Pancakes",
+    image: "https://hips.hearstapps.com/hmg-prod/images/best-homemade-pancakes-index-640775a2dbad8.jpg",
+    description: "Fluffy pancakes served with maple syrup and fresh fruits.",
+    category: "Breakfast",
+    cookingTime: 15,
+    servings: 4,
+    difficulty: "Easy",
+    ingredients: [
+      { name: "Flour", quantity: "2", unit: "cups" },
+      { name: "Milk", quantity: "1.5", unit: "cups" },
+      { name: "Eggs", quantity: "2", unit: "" },
+      { name: "Baking Powder", quantity: "2", unit: "tsp" },
+      { name: "Sugar", quantity: "2", unit: "tbsp" },
+      { name: "Butter", quantity: "2", unit: "tbsp" }
+    ],
+    instructions: [
+      { step: 1, description: "Mix dry ingredients in a bowl." },
+      { step: 2, description: "Add wet ingredients and mix gently." },
+      { step: 3, description: "Cook on griddle until bubbles form." },
+      { step: 4, description: "Flip and cook until golden brown." }
+    ],
+    likes: [],
+    savedBy: [],
+    createdBy: "Breakfast Club",
+    createdById: "breakfast1",
+    isApproved: true
+  },
+  {
+    _id: "breakfast2",
     title: "Masala Dosa",
-    image: "https://example.com/images/masala-dosa.jpg",
+    image: "https://vismaifood.com/storage/app/uploads/public/8b4/19e/427/thumb__1200_0_0_0_auto.jpg",
     description: "A crispy, golden crepe made from fermented rice and lentil batter, stuffed with a spiced potato filling.",
     category: "Breakfast",
     cookingTime: 30,
@@ -133,7 +132,8 @@ const manualRecipes = useMemo(() => ([
       { name: "Potatoes", quantity: "3", unit: "" },
       { name: "Mustard Seeds", quantity: "1", unit: "tsp" },
       { name: "Curry Leaves", quantity: "1", unit: "sprig" },
-      { name: "Turmeric Powder", quantity: "0.5", unit: "tsp" }
+      { name: "Turmeric Powder", quantity: "0.5", unit: "tsp" },
+      { name: "Onion", quantity: "1", unit: "" }
     ],
     instructions: [
       { step: 1, description: "Heat a tawa or griddle and grease it lightly." },
@@ -144,13 +144,13 @@ const manualRecipes = useMemo(() => ([
     likes: [],
     savedBy: [],
     createdBy: "Home Chef",
-    createdById: "breakfast1",
+    createdById: "breakfast2",
     isApproved: true
   },
   {
-    _id: "breakfast2",
+    _id: "breakfast3",
     title: "Poha",
-    image: "https://example.com/images/poha.jpg",
+    image: "https://www.theloveofspice.com/wp-content/uploads/2019/01/kanda-poha-recipe.jpg",
     description: "Flattened rice cooked with onions, spices, and a hint of lemon, a classic Maharashtrian breakfast.",
     category: "Breakfast",
     cookingTime: 15,
@@ -161,7 +161,8 @@ const manualRecipes = useMemo(() => ([
       { name: "Onion", quantity: "1", unit: "medium" },
       { name: "Mustard Seeds", quantity: "1", unit: "tsp" },
       { name: "Turmeric Powder", quantity: "0.5", unit: "tsp" },
-      { name: "Lemon Juice", quantity: "1", unit: "tbsp" }
+      { name: "Lemon Juice", quantity: "1", unit: "tbsp" },
+      { name: "Green Chillies", quantity: "2", unit: "" }
     ],
     instructions: [
       { step: 1, description: "Rinse poha in water and set aside." },
@@ -172,13 +173,13 @@ const manualRecipes = useMemo(() => ([
     likes: [],
     savedBy: [],
     createdBy: "Home Chef",
-    createdById: "breakfast2",
+    createdById: "breakfast3",
     isApproved: true
   },
   {
-    _id: "breakfast3",
+    _id: "breakfast4",
     title: "Upma",
-    image: "https://example.com/images/upma.jpg",
+    image: "https://www.vegrecipesofindia.com/wp-content/uploads/2019/05/upma-recipe-1.jpg",
     description: "A savory porridge made from semolina, cooked with vegetables and tempered with spices.",
     category: "Breakfast",
     cookingTime: 20,
@@ -200,13 +201,13 @@ const manualRecipes = useMemo(() => ([
     likes: [],
     savedBy: [],
     createdBy: "Home Chef",
-    createdById: "breakfast3",
+    createdById: "breakfast4",
     isApproved: true
   },
   {
-    _id: "breakfast4",
+    _id: "breakfast5",
     title: "Aloo Paratha",
-    image: "https://example.com/images/aloo-paratha.jpg",
+    image: "https://i.ytimg.com/vi/3rkXplTcAOA/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLA3BM4CTpDfbe7QkBOZ57UiSiu2uQ",
     description: "Whole wheat flatbreads stuffed with a flavorful, spiced mashed potato mixture.",
     category: "Breakfast",
     cookingTime: 40,
@@ -228,13 +229,13 @@ const manualRecipes = useMemo(() => ([
     likes: [],
     savedBy: [],
     createdBy: "Home Chef",
-    createdById: "breakfast4",
+    createdById: "breakfast5",
     isApproved: true
   },
   {
-    _id: "breakfast5",
+    _id: "breakfast6",
     title: "Besan Chilla",
-    image: "https://example.com/images/besan-chilla.jpg",
+    image: "https://www.vegrecipesofindia.com/wp-content/uploads/2021/02/besan-chilla-3.jpg",
     description: "Savory, protein-packed pancakes made from gram flour, perfect for a quick breakfast.",
     category: "Breakfast",
     cookingTime: 15,
@@ -256,13 +257,13 @@ const manualRecipes = useMemo(() => ([
     likes: [],
     savedBy: [],
     createdBy: "Home Chef",
-    createdById: "breakfast5",
+    createdById: "breakfast6",
     isApproved: true
   },
   {
     _id: "vegan1",
     title: "Chana Masala",
-    image: "https://example.com/images/chana-masala.jpg",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQl949jrdLZseI1fRYRqcoOiKw-RR8xMmNRNw&s",
     description: "A hearty and tangy curry made with chickpeas simmered in an onion-tomato gravy with aromatic spices.",
     category: "Vegan",
     cookingTime: 35,
@@ -290,7 +291,7 @@ const manualRecipes = useMemo(() => ([
   {
     _id: "vegan2",
     title: "Baingan Bharta",
-    image: "https://example.com/images/baingan-bharta.jpg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/4/4d/Baigan_Bharta_from_Nagpur.JPG",
     description: "Smoky, mashed eggplant cooked with peas, onions, and tomatoes.",
     category: "Vegan",
     cookingTime: 40,
@@ -318,7 +319,7 @@ const manualRecipes = useMemo(() => ([
   {
     _id: "vegan3",
     title: "Dal Tadka",
-    image: "https://example.com/images/dal-tadka.jpg",
+    image: "https://img.freepik.com/free-photo/indian-dhal-spicy-curry-bowl-spices-herbs-rustic-black-wooden-table_2829-18712.jpg",
     description: "Yellow lentils tempered with ghee (or oil), cumin, garlic, and red chilies.",
     category: "Vegan",
     cookingTime: 30,
@@ -346,7 +347,7 @@ const manualRecipes = useMemo(() => ([
   {
     _id: "vegan4",
     title: "Vegan Vegetable Biryani",
-    image: "https://example.com/images/vegan-biryani.jpg",
+    image: "https://images.getrecipekit.com/20210917112249-veg-biryani.jpg?aspect_ratio=16:9&quality=90",
     description: "Fragrant basmati rice layered with spiced vegetables and cooked on dum (steam).",
     category: "Vegan",
     cookingTime: 50,
@@ -374,7 +375,7 @@ const manualRecipes = useMemo(() => ([
   {
     _id: "vegan5",
     title: "Aloo Gobi",
-    image: "https://example.com/images/aloo-gobi.jpg",
+    image: "https://www.indianhealthyrecipes.com/wp-content/uploads/2022/03/aloo-gobi-recipe-500x375.jpg",
     description: "A dry curry of potatoes and cauliflower flavored with turmeric and cumin.",
     category: "Vegan",
     cookingTime: 30,
@@ -402,7 +403,7 @@ const manualRecipes = useMemo(() => ([
   {
     _id: "dessert1",
     title: "Gulab Jamun",
-    image: "https://example.com/images/gulab-jamun.jpg",
+    image: "https://www.cadburydessertscorner.com/hs-fs/hubfs/dc-website-2022/articles/soft-gulab-jamun-recipe-for-raksha-bandhan-from-dough-to-syrup-all-you-need-to-know/soft-gulab-jamun-recipe-for-raksha-bandhan-from-dough-to-syrup-all-you-need-to-know.webp",
     description: "Soft, deep-fried milk-solid dumplings soaked in a fragrant sugar syrup.",
     category: "Desserts",
     cookingTime: 60,
@@ -430,7 +431,7 @@ const manualRecipes = useMemo(() => ([
   {
     _id: "dessert2",
     title: "Gajar ka Halwa",
-    image: "https://example.com/images/gajar-ka-halwa.jpg",
+    image: "https://vanitascorner.com/wp-content/uploads/2018/01/carrothalwa.jpg",
     description: "A rich, slow-cooked pudding made from grated carrots, milk, sugar, and dry fruits.",
     category: "Desserts",
     cookingTime: 90,
@@ -458,7 +459,7 @@ const manualRecipes = useMemo(() => ([
   {
     _id: "dessert3",
     title: "Rasgulla",
-    image: "https://example.com/images/rasgulla.jpg",
+    image: "https://easysavorymeals.com/wp-content/uploads/2025/09/homemade-Rasgulla-Recipe.jpg",
     description: "Soft, spongy cottage cheese balls cooked in light sugar syrup.",
     category: "Desserts",
     cookingTime: 60,
@@ -486,7 +487,7 @@ const manualRecipes = useMemo(() => ([
   {
     _id: "dessert4",
     title: "Kheer (Rice Pudding)",
-    image: "https://example.com/images/kheer.jpg",
+    image: "https://api.flavournetwork.ca/wp-content/uploads/2023/03/kheer-feat.jpg?w=3840&quality=75",
     description: "A creamy, aromatic rice pudding made with milk, rice, sugar, and cardamom.",
     category: "Desserts",
     cookingTime: 45,
@@ -514,7 +515,7 @@ const manualRecipes = useMemo(() => ([
   {
     _id: "dessert5",
     title: "Jalebi",
-    image: "https://example.com/images/jalebi.jpg",
+    image: "https://static.toiimg.com/thumb/53099699.cms?width=1200&height=900",
     description: "Crispy, deep-fried swirls of fermented batter soaked in saffron sugar syrup.",
     category: "Desserts",
     cookingTime: 30,
@@ -539,10 +540,10 @@ const manualRecipes = useMemo(() => ([
     createdById: "dessert5",
     isApproved: true
   },
-   {
+  {
     _id: "quickbite1",
     title: "Samosa",
-    image: "https://example.com/images/samosa.jpg",
+    image: "https://cdn.pixabay.com/photo/2024/01/29/21/50/ai-generated-8540840_640.jpg",
     description: "Crispy, golden-brown pastry filled with a spiced mixture of potatoes and peas.",
     category: "Quick Bites",
     cookingTime: 50,
@@ -570,7 +571,7 @@ const manualRecipes = useMemo(() => ([
   {
     _id: "quickbite2",
     title: "Paneer Pakora",
-    image: "https://example.com/images/paneer-pakora.jpg",
+    image: "https://www.vegrecipesofindia.com/wp-content/uploads/2025/03/paneer-pakora-2.jpg",
     description: "Soft cubes of paneer coated in a spiced gram flour batter and deep-fried until crisp.",
     category: "Quick Bites",
     cookingTime: 25,
@@ -598,7 +599,7 @@ const manualRecipes = useMemo(() => ([
   {
     _id: "quickbite3",
     title: "Aloo Tikki",
-    image: "https://example.com/images/aloo-tikki.jpg",
+    image: "https://www.indianveggiedelight.com/wp-content/uploads/2023/07/aloo-tikki-featured-500x375.jpg",
     description: "Spiced potato patties, pan-fried until crispy on the outside and soft on the inside.",
     category: "Quick Bites",
     cookingTime: 30,
@@ -626,7 +627,7 @@ const manualRecipes = useMemo(() => ([
   {
     _id: "quickbite4",
     title: "Bhel Puri",
-    image: "https://example.com/images/bhel-puri.jpg",
+    image: "https://www.seema.com/wp-content/uploads/2022/08/Bhel-Puri-recipe.jpg",
     description: "A popular Mumbai street food made with puffed rice, vegetables, and tangy chutneys.",
     category: "Quick Bites",
     cookingTime: 10,
@@ -654,7 +655,7 @@ const manualRecipes = useMemo(() => ([
   {
     _id: "quickbite5",
     title: "Pav Bhaji",
-    image: "https://example.com/images/pav-bhaji.jpg",
+    image: "https://www.cubesnjuliennes.com/wp-content/uploads/2020/07/Instant-Pot-Mumbai-Pav-Bhaji-Recipe.jpg",
     description: "A flavorful mash of mixed vegetables served with soft, buttered bread rolls.",
     category: "Quick Bites",
     cookingTime: 30,
@@ -682,7 +683,7 @@ const manualRecipes = useMemo(() => ([
   {
     _id: "dinner1",
     title: "Butter Chicken",
-    image: "https://example.com/images/butter-chicken.jpg",
+    image: "https://nickskitchen.com/wp-content/uploads/2025/08/NK_Butter-Ckn_1-scaled.jpg",
     description: "Tender chicken pieces in a rich, creamy tomato and butter-based gravy.",
     category: "Dinner",
     cookingTime: 50,
@@ -710,7 +711,7 @@ const manualRecipes = useMemo(() => ([
   {
     _id: "dinner2",
     title: "Palak Paneer",
-    image: "https://example.com/images/palak-paneer.jpg",
+    image: "https://www.chefajaychopra.com/assets/img/recipe/1-1666433552palakpaneer1webp.webp",
     description: "Soft paneer cubes in a smooth, flavorful spinach gravy.",
     category: "Dinner",
     cookingTime: 40,
@@ -738,7 +739,7 @@ const manualRecipes = useMemo(() => ([
   {
     _id: "dinner3",
     title: "Rogan Josh",
-    image: "https://example.com/images/rogan-josh.jpg",
+    image: "https://silkroadrecipes.com/wp-content/uploads/2024/11/Rogan-Josh-Indian-Lamb-Curry-square.jpg",
     description: "Aromatic lamb curry from Kashmir, known for its rich red color and deep flavors.",
     category: "Dinner",
     cookingTime: 90,
@@ -766,7 +767,7 @@ const manualRecipes = useMemo(() => ([
   {
     _id: "dinner4",
     title: "Fish Curry",
-    image: "https://example.com/images/fish-curry.jpg",
+    image: "https://www.thedeliciouscrescent.com/wp-content/uploads/2023/07/Fish-Curry-4.jpg",
     description: "A tangy and spicy South Indian-style curry made with coconut and tamarind.",
     category: "Dinner",
     cookingTime: 35,
@@ -794,7 +795,7 @@ const manualRecipes = useMemo(() => ([
   {
     _id: "dinner5",
     title: "Rajma Masala",
-    image: "https://example.com/images/rajma-masala.jpg",
+    image: "https://img-cdn.publive.online/fit-in/640x430/filters:format(webp)/sanjeev-kapoor/media/media_files/2025/01/18/iI25V4epXhJwy1Mxw4EV.jpg",
     description: "A comforting North Indian curry of red kidney beans in a thick onion-tomato gravy.",
     category: "Dinner",
     cookingTime: 60,
@@ -818,10 +819,8 @@ const manualRecipes = useMemo(() => ([
     createdBy: "Home Chef",
     createdById: "dinner5",
     isApproved: true
-  },
-
-    // ⚠️ बाकी recipes same रहेंगे (तुम copy-paste कर सकते हो)
-  ]), []);
+  }
+]), []);
 
   // 🔥 FETCH RECIPE
  const fetchRecipeData = useCallback(async () => {

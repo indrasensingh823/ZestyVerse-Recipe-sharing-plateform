@@ -1,116 +1,316 @@
+/* ========== RECIPE CARD VARIABLES ========== */
+:root {
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --accent-orange: #ff6b35;
+  --accent-orange-dark: #e55a2b;
+  --text-dark: #2d3748;
+  --text-light: #718096;
+  --card-bg: #ffffff;
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-hover: 0 20px 30px -12px rgba(0, 0, 0, 0.2);
+  --border-radius-card: 20px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========== CARD BASE ========== */
 .recipe-card {
-  background: #1e293b;
-  border-radius: 16px;
+  background: var(--card-bg);
+  border-radius: var(--border-radius-card);
   overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
   cursor: pointer;
-  transition: 0.4s;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .recipe-card:hover {
-  transform: translateY(-10px) scale(1.02);
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-hover);
 }
 
-/* Image */
+/* ========== IMAGE CONTAINER (CRITICAL FOR GOOD IMAGE DISPLAY) ========== */
+/* Recipe Card Image Container – Full Image Visible */
 .recipe-image-container {
   position: relative;
-  height: 200px;
+  width: 100%;
+  padding-top: 66.67%; /* 3:2 aspect ratio – ensures consistent height */
+  background: #f0f0f0; /* fallback while loading */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
 }
 
 .recipe-image-container img {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  transition: 0.4s;
+  object-fit: contain;      /* 🔥 Shows entire image without cropping */
+  background: #f8f9fa;      /* neutral background for transparent areas */
+  transition: transform 0.3s ease;
 }
 
-.recipe-card:hover img {
-  transform: scale(1.1);
+/* Optional: On hover, slight zoom (still shows full image) */
+.recipe-card:hover .recipe-image-container img {
+  transform: scale(1.02);
 }
 
-/* Overlay */
+/* Overlay with tags */
 .overlay {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 12px;
   display: flex;
   gap: 8px;
+  justify-content: space-between;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.4), transparent);
+  pointer-events: none;
 }
 
 .tag {
-  padding: 5px 10px;
-  font-size: 12px;
-  border-radius: 20px;
-  background: rgba(0,0,0,0.6);
-  color: #fff;
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 30px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
 }
 
-/* Content */
+.tag.category {
+  background: var(--primary-gradient);
+  color: white;
+}
+
+.tag.difficulty {
+  background: var(--accent-orange);
+  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+}
+
+/* ========== CONTENT STYLES ========== */
 .recipe-content {
-  padding: 15px;
-  color: #fff;
+  padding: 1.25rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
 .recipe-content h3 {
-  margin-bottom: 8px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .recipe-content p {
-  font-size: 14px;
-  color: #cbd5f5;
+  font-size: 0.85rem;
+  color: var(--text-light);
+  line-height: 1.5;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-/* Meta */
+/* Recipe Meta (time, servings, likes) */
 .recipe-meta {
   display: flex;
-  justify-content: space-between;
-  margin: 10px 0;
-  font-size: 13px;
-  color: #94a3b8;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.75rem;
+  color: var(--text-light);
+  padding: 0.5rem 0;
+  border-top: 1px solid #edf2f7;
+  border-bottom: 1px solid #edf2f7;
 }
 
 .recipe-meta span {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
 }
 
-/* Actions */
+.recipe-meta svg {
+  font-size: 0.8rem;
+}
+
+/* Action Buttons */
 .recipe-actions {
   display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.25rem 0;
 }
 
 .btn {
-  background: #0f172a;
+  background: transparent;
   border: none;
-  color: #fff;
   padding: 8px;
   border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  transition: 0.3s;
+  transition: var(--transition);
+  color: var(--text-light);
+  font-size: 1.1rem;
 }
 
 .btn:hover {
-  background: #38bdf8;
-  color: #0f172a;
-  transform: scale(1.2);
+  background: #f7fafc;
+  transform: translateY(-2px);
 }
 
-/* Active States */
 .btn.like.active {
-  color: #ef4444;
+  color: #e53e3e;
+}
+
+.btn.like.active:hover {
+  background: #fff5f5;
 }
 
 .btn.save.active {
-  color: #facc15;
+  color: var(--accent-orange);
+}
+
+.btn.save.active:hover {
+  background: #fffaf5;
+}
+
+/* Share button hover */
+.btn:hover svg {
+  transform: scale(1.05);
 }
 
 /* Author */
 .author {
-  margin-top: 10px;
-  font-size: 12px;
-  color: #94a3b8;
+  font-size: 0.7rem;
+  color: var(--text-light);
+  margin-top: 0.25rem;
+  font-style: italic;
+}
+
+/* ========== RESPONSIVE ADJUSTMENTS ========== */
+
+/* Tablet */
+@media (max-width: 768px) {
+  .recipe-image-container {
+    padding-top: 75%; /* 4:3 aspect ratio on tablets – better use of space */
+  }
+
+  .recipe-content {
+    padding: 1rem;
+  }
+
+  .recipe-content h3 {
+    font-size: 1rem;
+  }
+
+  .recipe-meta {
+    gap: 0.75rem;
+    font-size: 0.7rem;
+  }
+
+  .btn {
+    padding: 6px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Small mobile */
+@media (max-width: 480px) {
+  .recipe-image-container {
+    padding-top: 80%; /* Slightly taller on very small screens */
+  }
+
+  .recipe-content {
+    padding: 0.875rem;
+  }
+
+  .recipe-content h3 {
+    font-size: 0.95rem;
+  }
+
+  .recipe-meta {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tag {
+    font-size: 0.6rem;
+    padding: 3px 8px;
+  }
+}
+
+/* Large screens – grid adjustments (you'll use this in parent grid) */
+@media (min-width: 1200px) {
+  .recipe-image-container {
+    padding-top: 66.67%; /* keep 3:2 good for large screens */
+  }
+}
+
+/* ========== ANIMATIONS ========== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.recipe-card {
+  animation: fadeInUp 0.4s ease backwards;
+}
+
+/* Stagger effect for grid items – apply via nth-child in parent grid */
+.recipe-card:nth-child(1) { animation-delay: 0.05s; }
+.recipe-card:nth-child(2) { animation-delay: 0.1s; }
+.recipe-card:nth-child(3) { animation-delay: 0.15s; }
+.recipe-card:nth-child(4) { animation-delay: 0.2s; }
+.recipe-card:nth-child(5) { animation-delay: 0.25s; }
+.recipe-card:nth-child(6) { animation-delay: 0.3s; }
+
+/* ========== HOVER ENHANCEMENTS ========== */
+.recipe-card:hover .recipe-actions .btn {
+  opacity: 1;
+}
+
+.recipe-actions .btn:active {
+  transform: scale(0.95);
+}
+
+/* Focus states for accessibility */
+.btn:focus-visible {
+  outline: 2px solid var(--accent-orange);
+  outline-offset: 2px;
+}
+
+/* ========== OPTIONAL: IMAGE LOADING STATE ========== */
+.recipe-image-container img[loading="lazy"] {
+  filter: blur(2px);
+  transition: filter 0.2s;
+}
+
+.recipe-image-container img[loading="lazy"].loaded {
+  filter: blur(0);
 }
